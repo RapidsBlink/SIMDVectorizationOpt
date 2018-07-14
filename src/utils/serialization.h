@@ -28,4 +28,9 @@ int serialize_base36_decoding_skip_index(uint8_t *message, uint16_t len, uint8_t
 uint8_t *deserialize_base36_encoding_add_index(const uint8_t *serialized, uint16_t total_serialized_len,
                                                int &deserialized_len, int32_t idx);
 
+// 4th: base36 supporting small message
+#define FIXED_BASES_SLOT_LEN 48
+
+int serialize_base36_decoding_with_padding_skip_index(uint8_t *message, uint16_t len, uint8_t *serialized);
+
 #endif //QUEUERACE_SERIALIZATION_H

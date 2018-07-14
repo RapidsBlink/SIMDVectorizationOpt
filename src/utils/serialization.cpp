@@ -175,3 +175,30 @@ uint8_t *deserialize_base36_encoding_add_index(const uint8_t *serialized, uint16
 }
 // ------------------------------ End of Base36, do not support A-Z yet --------------------------------------------
 
+int serialize_base36_decoding_with_padding_skip_index(uint8_t *message, uint16_t len, uint8_t *serialized) {
+    auto serialize_len = len - FIXED_PART_LEN;
+
+    // 1st: fallback to normal cases when `serialize_len >= FIXED_BASES_SLOT_LEN`
+    if (serialize_len >= FIXED_BASES_SLOT_LEN) {
+        return serialize_base36_decoding_skip_index(message, len, serialized);
+    }
+
+    // 2nd: handle smaller messages
+    size_t estimated_length = FIXED_BASES_SLOT_LEN / 4 * 3;
+    memcpy(serialized + estimated_length, message + serialize_len, BASE64_INFO_LEN);
+    memcpy(serialized + estimated_length + BASE64_INFO_LEN, message + serialize_len + BASE64_INFO_LEN + INDEX_LEN,
+           VARYING_VERIFY_LEN);
+
+    uint8_t local_storage[FIXED_BASES_SLOT_LEN];
+    memset(local_storage, 'B', FIXED_BASES_SLOT_LEN);
+    memcpy(local_storage, message, serialize_len);
+
+#ifdef __AVX2__
+    fast_avx2_base64_decode(reinterpret_cast<char *>(serialized),
+                                            reinterpret_cast<const char *>(local_storage), FIXED_BASES_SLOT_LEN);
+#else
+    chromium_base64_decode(reinterpret_cast<char *>(serialized),
+                           reinterpret_cast<const char *>(local_storage), FIXED_BASES_SLOT_LEN);
+#endif
+    return estimated_length + FIXED_PART_LEN - INDEX_LEN;
+}
