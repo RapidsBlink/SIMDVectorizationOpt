@@ -85,7 +85,7 @@ void test_efficiency_base64() {
 
     auto end = high_resolution_clock::now();
     log_info("elapsed time: %.6fs", duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)));
-    log_info("TPS: %f MB/s", (MSG_LEN) * static_cast<double>(MSG_NUM) /
+    log_info("TPS: %f MB/s", (MSG_LEN + FIXED_PART_LEN - BASE64_INFO_LEN) * static_cast<double>(MSG_NUM) /
                              (duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)))
                              / (1024 * 1024));
     delete[]msg_arr;
@@ -142,7 +142,7 @@ void test_efficiency_base64_skip_index() {
 
     auto end = high_resolution_clock::now();
     log_info("elapsed time: %.6fs", duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)));
-    log_info("TPS: %f MB/s", (MSG_LEN) * static_cast<double>(MSG_NUM) /
+    log_info("TPS: %f MB/s", (MSG_LEN + FIXED_PART_LEN - BASE64_INFO_LEN) * static_cast<double>(MSG_NUM) /
                              (duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)))
                              / (1024 * 1024));
     delete[]msg_arr;
@@ -199,7 +199,7 @@ void test_efficiency_base36_skip_index() {
 
     auto end = high_resolution_clock::now();
     log_info("elapsed time: %.6fs", duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)));
-    log_info("TPS: %f MB/s", (MSG_LEN) * static_cast<double>(MSG_NUM) /
+    log_info("TPS: %f MB/s", (MSG_LEN + FIXED_PART_LEN - BASE64_INFO_LEN) * static_cast<double>(MSG_NUM) /
                              (duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)))
                              / (1024 * 1024));
     delete[]msg_arr;
@@ -256,7 +256,7 @@ void test_efficiency_base36_skip_index_support_small_msg() {
 
     auto end = high_resolution_clock::now();
     log_info("elapsed time: %.6fs", duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)));
-    log_info("TPS: %f MB/s", (SMALL_MSG_LEN) * static_cast<double>(MSG_NUM) /
+    log_info("TPS: %f MB/s", (SMALL_MSG_LEN + FIXED_PART_LEN - BASE64_INFO_LEN) * static_cast<double>(MSG_NUM) /
                              (duration_cast<microseconds>(end - start).count() / static_cast<float>(pow(10, 6)))
                              / (1024 * 1024));
     delete[]msg_arr;
