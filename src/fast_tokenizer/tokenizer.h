@@ -17,6 +17,10 @@ void generate_header(char *res, int body_len, int64_t req_id);
 
 int generate_res_in_place(char *res, char *str, short len, int64_t req_id);
 
+int generate_res_in_place_serial(char *res, char *str, short len, int64_t req_id);
+
+int generate_res_in_place_sse(char *res, char *str, short len, int64_t req_id);
+
 int generate_res_in_place_hard_code(char *res, char *str, short len, int64_t req_id);
 
 #endif //AGENT_TOKENIZER_H

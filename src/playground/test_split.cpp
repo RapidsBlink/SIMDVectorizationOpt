@@ -74,6 +74,7 @@ void test_generate_body() {
     auto *str_buffer = static_cast<char *>(malloc(sizeof(char) * 4096));
     memcpy(str_buffer, my_str, len);
 
+    // 1st: hard code
     clock_t t1, t2;
     long elapsed;
     int64_t req_id = 0;
@@ -86,9 +87,46 @@ void test_generate_body() {
     }
     t2 = clock();
     elapsed = timediff(t1, t2);
-    printf("total transform time: %ld ms\n", elapsed);
+    printf("total hard code transform time: %ld ms\n\n", elapsed);
 
-    // last round
+    // 2nd: serial
+    t1 = clock();
+    for (int i = 0; i < 5000 * 60; i++) {
+        auto *res = static_cast<char *>(malloc(sizeof(char) * 2048));
+        generate_res_in_place_serial(res, str_buffer, len, req_id);
+        req_id++;
+        free(res);
+    }
+    t2 = clock();
+    elapsed = timediff(t1, t2);
+    printf("total serial transform time: %ld ms\n\n", elapsed);
+
+    // 3rd: sse
+    t1 = clock();
+    for (int i = 0; i < 5000 * 60; i++) {
+        auto *res = static_cast<char *>(malloc(sizeof(char) * 2048));
+        generate_res_in_place_sse(res, str_buffer, len, req_id);
+        req_id++;
+        free(res);
+    }
+    t2 = clock();
+    elapsed = timediff(t1, t2);
+    printf("total sse4 transform time: %ld ms\n\n", elapsed);
+
+    // 4th: adaptive optimal avx2
+    t1 = clock();
+    for (int i = 0; i < 5000 * 60; i++) {
+        auto *res = static_cast<char *>(malloc(sizeof(char) * 2048));
+        generate_res_in_place(res, str_buffer, len, req_id);
+        req_id++;
+        free(res);
+    }
+    t2 = clock();
+    elapsed = timediff(t1, t2);
+    printf("total avx2 transform time: %ld ms\n\n", elapsed);
+
+    // last round print out the results
+    printf("-------------------\n");
     auto *res = (char *) malloc(sizeof(char) * 2048);
     int offset = generate_res_in_place(res, str_buffer, len, req_id);
 
@@ -102,6 +140,6 @@ void test_generate_body() {
 }
 
 int main() {
-    test_split();
+//    test_split();
     test_generate_body();
 }

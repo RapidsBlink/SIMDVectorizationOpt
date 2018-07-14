@@ -217,9 +217,158 @@ int serialize_str(char *str, const short *off, short len_off, int offset, char *
                     }
                     if (seek > val_off_end) { seek = val_off_end; }
 #else
-                    // printf("serial...");
+                     printf("serial...");
                     while (seek < val_off_end && str[seek] != '%') { seek++; }
 #endif
+                    int advance = seek - last_seek;
+                    memcpy(res + offset, str + last_seek, advance);
+                    offset += advance;
+                    // decode %xx
+                    if (seek != val_off_end) {
+                        res[offset] = (char) (hex2int(str[seek + 1]) * 16 + hex2int(str[seek + 2]));
+                        offset++;
+                        seek += 3;  //skip "%xx"
+                    }
+                }
+
+                memcpy(res + offset, "\"\n", 2);
+                offset += 2;
+                break;
+            }
+        }
+    }
+    return offset;
+}
+
+#if defined(__BMI__)
+
+int serialize_str_bmi(char *str, const short *off, short len_off, int offset, char *res, int j) {
+    for (int i = 0; i < len_off / 2; i++) {
+        int real_i = i * 2;
+        int key_off_beg = off[real_i] + 1;
+        int key_off_end = off[real_i + 1];
+        //log_debug("key length: %d, key: %.*s", key_off_end - key_off_beg, key_off_end - key_off_beg, str+key_off_beg);
+        // add post_keys[j][0] == str[key_off_beg] to reduce strncmp invocations
+        if (post_keys[j][0] == str[key_off_beg] && key_off_end - key_off_beg == post_keys_size[j]) {
+            if (strncmp(post_keys[j], str + key_off_beg, key_off_end - key_off_beg) == 0) {
+                res[offset] = '"';
+                offset++;
+
+                // copy and decoding url e.g. '%2F' to '/', wrap as a inline function later
+                int val_off_beg = off[real_i + 1] + 1;
+                int val_off_end = off[real_i + 2];
+                for (int last_seek, seek = val_off_beg; seek < val_off_end;) {
+                    last_seek = seek;
+
+                    // find first % or end
+                    // printf("bmi...");
+                    while (true) {
+                        __m128i pivot_u = _mm_set1_epi8('%');
+                        __m128i inspected_ele = _mm_loadu_si128((__m128i *) (str + seek));
+                        __m128i cmp_res = _mm_cmpeq_epi8(pivot_u, inspected_ele);
+
+                        int mask = _mm_movemask_epi8(cmp_res); // 16 bits
+
+                        int advance = (mask == 0 ? 16 : __tzcnt_u32(mask));
+                        seek += advance;
+                        if (advance < 16 || seek >= val_off_end) { break; }
+                    }
+                    if (seek > val_off_end) { seek = val_off_end; }
+
+                    int advance = seek - last_seek;
+                    memcpy(res + offset, str + last_seek, advance);
+                    offset += advance;
+                    // decode %xx
+                    if (seek != val_off_end) {
+                        res[offset] = (char) (hex2int(str[seek + 1]) * 16 + hex2int(str[seek + 2]));
+                        offset++;
+                        seek += 3;  //skip "%xx"
+                    }
+                }
+
+                memcpy(res + offset, "\"\n", 2);
+                offset += 2;
+                break;
+            }
+        }
+    }
+    return offset;
+}
+#endif
+
+int serialize_str_sse4(char *str, const short *off, short len_off, int offset, char *res, int j) {
+    for (int i = 0; i < len_off / 2; i++) {
+        int real_i = i * 2;
+        int key_off_beg = off[real_i] + 1;
+        int key_off_end = off[real_i + 1];
+        //log_debug("key length: %d, key: %.*s", key_off_end - key_off_beg, key_off_end - key_off_beg, str+key_off_beg);
+        // add post_keys[j][0] == str[key_off_beg] to reduce strncmp invocations
+        if (post_keys[j][0] == str[key_off_beg] && key_off_end - key_off_beg == post_keys_size[j]) {
+            if (strncmp(post_keys[j], str + key_off_beg, key_off_end - key_off_beg) == 0) {
+                res[offset] = '"';
+                offset++;
+
+                // copy and decoding url e.g. '%2F' to '/', wrap as a inline function later
+                int val_off_beg = off[real_i + 1] + 1;
+                int val_off_end = off[real_i + 2];
+                for (int last_seek, seek = val_off_beg; seek < val_off_end;) {
+                    last_seek = seek;
+
+                    // find first % or end
+                    // printf("sse...");
+                    while (true) {
+                        __m128i pivot_u = _mm_set1_epi8('%');
+                        __m128i inspected_ele = _mm_loadu_si128((__m128i *) (str + seek));
+                        __m128i cmp_res = _mm_cmpeq_epi8(pivot_u, inspected_ele);
+
+                        int mask = _mm_movemask_epi8(cmp_res); // 16 bits
+
+                        int advance = (mask == 0 ? 16 : __tzcnt_u32_using_popcnt_cmpgt(mask));
+                        seek += advance;
+                        if (advance < 16 || seek >= val_off_end) { break; }
+                    }
+                    if (seek > val_off_end) { seek = val_off_end; }
+
+                    int advance = seek - last_seek;
+                    memcpy(res + offset, str + last_seek, advance);
+                    offset += advance;
+                    // decode %xx
+                    if (seek != val_off_end) {
+                        res[offset] = (char) (hex2int(str[seek + 1]) * 16 + hex2int(str[seek + 2]));
+                        offset++;
+                        seek += 3;  //skip "%xx"
+                    }
+                }
+
+                memcpy(res + offset, "\"\n", 2);
+                offset += 2;
+                break;
+            }
+        }
+    }
+    return offset;
+}
+
+int serialize_str_serial(char *str, const short *off, short len_off, int offset, char *res, int j) {
+    for (int i = 0; i < len_off / 2; i++) {
+        int real_i = i * 2;
+        int key_off_beg = off[real_i] + 1;
+        int key_off_end = off[real_i + 1];
+        //log_debug("key length: %d, key: %.*s", key_off_end - key_off_beg, key_off_end - key_off_beg, str+key_off_beg);
+        // add post_keys[j][0] == str[key_off_beg] to reduce strncmp invocations
+        if (post_keys[j][0] == str[key_off_beg] && key_off_end - key_off_beg == post_keys_size[j]) {
+            if (strncmp(post_keys[j], str + key_off_beg, key_off_end - key_off_beg) == 0) {
+                res[offset] = '"';
+                offset++;
+
+                // copy and decoding url e.g. '%2F' to '/', wrap as a inline function later
+                int val_off_beg = off[real_i + 1] + 1;
+                int val_off_end = off[real_i + 2];
+                for (int last_seek, seek = val_off_beg; seek < val_off_end;) {
+                    last_seek = seek;
+
+                    // find first % or end
+                    while (seek < val_off_end && str[seek] != '%') { seek++; }
                     int advance = seek - last_seek;
                     memcpy(res + offset, str + last_seek, advance);
                     offset += advance;
@@ -295,6 +444,56 @@ int generate_res_in_place(char *res, char *str, short len, int64_t req_id) {
     short len_off = (short) simd_split_efficient(str, len, off);
 
     int offset = generate_body(res, str, off, len_off);
+    generate_header(res, offset - 16, req_id);
+    return offset;
+}
+
+int generate_body_serial(char *res, char *str_buffer, short *off, short len_off) {
+    int offset = 16;
+    memcpy(res + offset, "\"2.0.1\"\n", 8);
+    offset += 8;
+    offset = serialize_str_serial(str_buffer, off, len_off, offset, res, 0);
+    memcpy(res + offset, "null\n", 5);
+    offset += 5;
+    offset = serialize_str_serial(str_buffer, off, len_off, offset, res, 1);
+    offset = serialize_str_serial(str_buffer, off, len_off, offset, res, 2);
+    offset = serialize_str_serial(str_buffer, off, len_off, offset, res, 3);
+    offset = serialize_path_dict(str_buffer, off, len_off, offset, res);
+
+    return offset;
+}
+
+int generate_body_sse(char *res, char *str_buffer, short *off, short len_off) {
+    int offset = 16;
+    memcpy(res + offset, "\"2.0.1\"\n", 8);
+    offset += 8;
+    offset = serialize_str_sse4(str_buffer, off, len_off, offset, res, 0);
+    memcpy(res + offset, "null\n", 5);
+    offset += 5;
+    offset = serialize_str_sse4(str_buffer, off, len_off, offset, res, 1);
+    offset = serialize_str_sse4(str_buffer, off, len_off, offset, res, 2);
+    offset = serialize_str_sse4(str_buffer, off, len_off, offset, res, 3);
+    offset = serialize_path_dict(str_buffer, off, len_off, offset, res);
+
+    return offset;
+}
+
+int generate_res_in_place_serial(char *res, char *str, short len, int64_t req_id) {
+    short off[32];  // 32 for at most 16 (key, val)
+
+    short len_off = (short) serial_split(str, len, off);
+
+    int offset = generate_body_serial(res, str, off, len_off);
+    generate_header(res, offset - 16, req_id);
+    return offset;
+}
+
+int generate_res_in_place_sse(char *res, char *str, short len, int64_t req_id) {
+    short off[32];  // 32 for at most 16 (key, val)
+
+    short len_off = (short) serial_split(str, len, off);
+
+    int offset = generate_body_sse(res, str, off, len_off);
     generate_header(res, offset - 16, req_id);
     return offset;
 }
