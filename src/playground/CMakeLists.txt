@@ -24,3 +24,8 @@ add_executable(test_serialization test_serialization.cpp ../utils/serialization.
 
 add_executable(test_split_avx test_split.cpp ../fast_tokenizer/tokenizer.cpp ../utils/utils.cpp ../utils/log.cpp)
 target_compile_options(test_split_avx PRIVATE -O2)
+
+if (AVX2_FOUND)
+    add_executable(test_avx2_instrinsics test_avx2_instrinsics.cpp ../utils/log.cpp)
+    target_compile_options(test_avx2_instrinsics PRIVATE -march=native)
+endif ()

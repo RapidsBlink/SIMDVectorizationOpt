@@ -17,7 +17,7 @@ int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialize
 #ifdef __AVX2__
     fast_avx2_base64_decode(reinterpret_cast<char *>(serialized),
                                             reinterpret_cast<const char *>(buf),
-                                       qq     serialize_len + padding_chars);
+                                            serialize_len + padding_chars);
 #else
 
     chromium_base64_decode(reinterpret_cast<char *>(serialized),
