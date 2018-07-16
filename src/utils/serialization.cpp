@@ -9,7 +9,8 @@
 #define SERIAL_ENCODE chromium_base64_encode
 //#define SERIAL_DECODE naive_base64_decode
 //#define SERIAL_ENCODE naive_base64_encode
-
+//#define SERIAL_DECODE naive_base64_decode_comp
+//#define SERIAL_ENCODE naive_base64_encode_comp
 //#undef __AVX2__
 
 int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialized) {
