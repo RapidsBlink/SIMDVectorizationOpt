@@ -5,13 +5,20 @@
 #include "../fast_base64/fastavxbase64.h"
 #include "../naive_base64/naive_base64.h"
 
+#if defined(NAIVE_LOOKUP)
+#define SERIAL_DECODE naive_base64_decode
+#define SERIAL_ENCODE naive_base64_encode
+#elif defined(NAIVE_COMP)
+#define SERIAL_DECODE naive_base64_decode_comp
+#define SERIAL_ENCODE naive_base64_encode_comp
+#else
 #define SERIAL_DECODE chromium_base64_decode
 #define SERIAL_ENCODE chromium_base64_encode
-//#define SERIAL_DECODE naive_base64_decode
-//#define SERIAL_ENCODE naive_base64_encode
-//#define SERIAL_DECODE naive_base64_decode_comp
-//#define SERIAL_ENCODE naive_base64_encode_comp
-//#undef __AVX2__
+#endif
+
+#if defined(DISABLE_AVX2)
+#undef __AVX2__
+#endif
 
 int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialized) {
     auto serialize_len = len - FIXED_PART_LEN;

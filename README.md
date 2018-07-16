@@ -102,18 +102,18 @@ fast-avx2    | apply avx2, and serial fallback using chromium
 
 * message len 80
 
-algorithms | TPS
---- | ---
-naive-comp   | 151.151991 MB/s
-naive-lookup | 406.132152 MB/s
-chromium     | 406.546169 MB/s
-fast-avx2    | 570.026750 MB/s
+algorithms | TPS-total | TPS-serializtion | TPS-deserializtion
+--- | ---  | --- | --- 
+naive_comp | 149.235 MB/s | 288.609 MB/s | 309.029 MB/s
+naive_lookup | 394.224 MB/s | 740.423 MB/s | 843.135 MB/s
+chromium | 409.404 MB/s | 725.954 MB/s | 938.900 MB/s
+avx2_chromium | 556.984 MB/s | 974.215 MB/s | 1300.531 MB/s
 
 * message len 50
 
-algorithms | TPS
---- | ---
-naive-comp   | 117.456860 MB/s
-naive-lookup | 325.850751 MB/s
-chromium     | 331.729820 MB/s
-fast-avx2    | 391.287010 MB/s
+algorithms | TPS-total | TPS-serializtion | TPS-deserializtion
+--- | ---  | --- | --- 
+naive_comp | 115.787 MB/s | 218.357 MB/s | 246.493 MB/s
+naive_lookup | 330.488 MB/s | 598.695 MB/s | 737.719 MB/s
+chromium | 335.035 MB/s | 595.675 MB/s | 765.698 MB/s
+avx2_chromium | 385.963 MB/s | 656.360 MB/s | 936.887 MB/s

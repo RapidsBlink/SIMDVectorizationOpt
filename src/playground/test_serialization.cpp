@@ -28,7 +28,7 @@ char bases36[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
 #define BASE36_SIZE 36
 #define MSG_NUM 100000000
 #define ARR_SIZE 209715200
-#define MSG_LEN 50
+#define MSG_LEN 200
 #define SMALL_MSG_LEN 30
 
 using namespace std;
@@ -70,6 +70,7 @@ void test_efficiency_base64() {
                                                    MSG_LEN + 8,
                                                    reinterpret_cast<uint8_t *>(serialized));
 
+#ifdef ENABLE_DESERIALIZE
         // 2nd: deserialize
         int length;
         auto deserialized = deserialize_base64_encoding(reinterpret_cast<const uint8_t *>(serialized), middle_len,
@@ -78,9 +79,10 @@ void test_efficiency_base64() {
         assert(memcmp(msg_arr + idx, deserialized, MSG_LEN) == 0);
         assert(memcmp(&idx, deserialized + MSG_LEN, 4) == 0);
         assert(memcmp(&idx, deserialized + MSG_LEN + 4, 4) == 0);
+        delete[]deserialized;
+#endif
 
         delete[]serialized;
-        delete[]deserialized;
     }
 
     auto end = high_resolution_clock::now();
@@ -127,6 +129,7 @@ void test_efficiency_base64_skip_index() {
                                                               MSG_LEN + 8,
                                                               reinterpret_cast<uint8_t *>(serialized));
 
+#ifdef ENABLE_DESERIALIZE
         // 2nd: deserialize
         int length;
         auto deserialized = deserialize_base64_encoding_add_index(reinterpret_cast<const uint8_t *>(serialized),
@@ -135,9 +138,9 @@ void test_efficiency_base64_skip_index() {
         assert(memcmp(msg_arr + idx, deserialized, MSG_LEN) == 0);
         assert(memcmp(&idx, deserialized + MSG_LEN, 4) == 0);
         assert(memcmp(&idx, deserialized + MSG_LEN + 4, 4) == 0);
-
-        delete[]serialized;
         delete[]deserialized;
+#endif
+        delete[]serialized;
     }
 
     auto end = high_resolution_clock::now();
@@ -183,7 +186,7 @@ void test_efficiency_base36_skip_index() {
         int middle_len = serialize_base36_decoding_skip_index(reinterpret_cast<uint8_t *>(intermediate),
                                                               MSG_LEN + 8,
                                                               reinterpret_cast<uint8_t *>(serialized));
-
+#ifdef ENABLE_DESERIALIZE
         // 2nd: deserialize
         int length;
         auto deserialized = deserialize_base36_encoding_add_index(reinterpret_cast<const uint8_t *>(serialized),
@@ -192,9 +195,9 @@ void test_efficiency_base36_skip_index() {
         assert(memcmp(msg_arr + idx, deserialized, MSG_LEN) == 0);
         assert(memcmp(&idx, deserialized + MSG_LEN, 4) == 0);
         assert(memcmp(&idx, deserialized + MSG_LEN + 4, 4) == 0);
-
-        delete[]serialized;
         delete[]deserialized;
+#endif
+        delete[]serialized;
     }
 
     auto end = high_resolution_clock::now();
@@ -240,7 +243,7 @@ void test_efficiency_base36_skip_index_support_small_msg() {
         int middle_len = serialize_base36_decoding_with_padding_skip_index(reinterpret_cast<uint8_t *>(intermediate),
                                                                            SMALL_MSG_LEN + 8,
                                                                            reinterpret_cast<uint8_t *>(serialized));
-
+#ifdef ENABLE_DESERIALIZE
         // 2nd: deserialize
         int length;
         auto deserialized = deserialize_base36_encoding_add_index(reinterpret_cast<const uint8_t *>(serialized),
@@ -249,9 +252,9 @@ void test_efficiency_base36_skip_index_support_small_msg() {
         assert(memcmp(msg_arr + idx, deserialized, SMALL_MSG_LEN) == 0);
         assert(memcmp(&idx, deserialized + SMALL_MSG_LEN, 4) == 0);
         assert(memcmp(&idx, deserialized + SMALL_MSG_LEN + 4, 4) == 0);
-
-        delete[]serialized;
         delete[]deserialized;
+#endif
+        delete[]serialized;
     }
 
     auto end = high_resolution_clock::now();
