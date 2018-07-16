@@ -50,36 +50,52 @@ server supporting avx2
 base64, base64, base36, small-padding-base36
 
 ```
-21:35:46 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
-21:36:01 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 14.792393s
-21:36:01 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 515.764736 MB/s
-21:36:01 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
-21:36:16 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 14.808870s
-21:36:16 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 515.190853 MB/s
-21:36:16 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
-21:36:31 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 14.768680s
-21:36:31 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 516.592866 MB/s
-21:36:31 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
-21:36:47 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 15.659643s
-21:36:47 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 182.700392 MB/s
+11:01:19 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
+11:01:34 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 14.722702s
+11:01:34 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 570.026750 MB/s
+11:01:34 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
+11:01:49 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 14.721010s
+11:01:49 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 570.092260 MB/s
+11:01:49 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
+11:02:04 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 14.753758s
+11:02:04 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 568.826853 MB/s
+11:02:04 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
+11:02:20 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 15.614043s
+11:02:20 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 232.096347 MB/s
+```
+
+### Chromium
 
 ```
-### Normal
+11:03:24 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
+11:03:45 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 20.643003s
+11:03:45 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 406.546169 MB/s
+11:03:45 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
+11:04:06 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 20.614565s
+11:04:06 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 407.107015 MB/s
+11:04:06 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
+11:04:27 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 20.679508s
+11:04:27 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 405.828509 MB/s
+11:04:27 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
+11:04:44 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 17.294928s
+11:04:44 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 209.539033 MB/s
+```
+
+### Naive-Lookup-Table
 
 ```
-21:37:29 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
-21:37:51 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 21.757704s
-21:37:51 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 350.652560 MB/s
-21:37:51 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
-21:38:13 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 21.562340s
-21:38:13 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 353.829622 MB/s
-21:38:13 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
-21:38:35 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 21.378904s
-21:38:35 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 356.865553 MB/s
-21:38:35 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
-21:38:53 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 18.007008s
-21:38:53 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 158.883864 MB/s
-
+10:58:25 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
+10:58:46 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 20.664047s
+10:58:46 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 406.132152 MB/s
+10:58:46 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
+10:59:07 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 20.773008s
+10:59:07 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 404.001859 MB/s
+10:59:07 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
+10:59:28 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 20.758757s
+10:59:28 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 404.279222 MB/s
+10:59:28 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
+10:59:46 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 17.479488s
+10:59:46 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 207.326572 MB/s
 ```
 
 ## Base64 Operations, msg len 50
@@ -103,20 +119,36 @@ base64, base64, base36, small-padding-base36
 21:48:32 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 231.035525 MB/s
 ```
 
-### Normal
+### Chromium
 
 ```
-21:44:04 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
-21:44:20 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 16.709606s
-21:44:20 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 331.025817 MB/s
-21:44:21 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
-21:44:37 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 16.660173s
-21:44:37 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 332.008011 MB/s
-21:44:38 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
-21:44:54 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 16.539164s
-21:44:54 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 334.437168 MB/s
-21:44:54 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
-21:45:13 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 18.106968s
-21:45:13 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 200.141869 MB/s
+11:05:27 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
+11:05:44 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 16.674145s
+11:05:44 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 331.729820 MB/s
+11:05:44 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
+11:06:01 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 16.584595s
+11:06:01 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 333.521025 MB/s
+11:06:01 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
+11:06:18 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 16.483555s
+11:06:18 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 335.565422 MB/s
+11:06:18 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
+11:06:36 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 17.454824s
+11:06:36 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 207.619527 MB/s
+```
 
+### Naive-LookUp-Table
+
+```cpp
+10:56:12 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:58: finish init
+10:56:29 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:87: elapsed time: 16.974983s
+10:56:29 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:90: TPS: 325.850751 MB/s
+10:56:29 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:115: finish init
+10:56:47 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:144: elapsed time: 17.453079s
+10:56:47 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:147: TPS: 316.924651 MB/s
+10:56:47 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:172: finish init
+10:57:04 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:201: elapsed time: 17.070135s
+10:57:04 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:204: TPS: 324.034403 MB/s
+10:57:04 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:229: finish init
+10:57:22 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:258: elapsed time: 18.099405s
+10:57:22 INFO  /homes/ywangby/workspace/yche/GitRepos/SIMDVectorizationOpt/src/playground/test_serialization.cpp:261: TPS: 200.225496 MB/s
 ```

@@ -3,6 +3,14 @@
 
 #include "serialization.h"
 #include "../fast_base64/fastavxbase64.h"
+#include "../naive_base64/naive_base64.h"
+
+#define SERIAL_DECODE chromium_base64_decode
+#define SERIAL_ENCODE chromium_base64_encode
+//#define SERIAL_DECODE naive_base64_decode
+//#define SERIAL_ENCODE naive_base64_encode
+
+//#undef __AVX2__
 
 int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialized) {
     auto serialize_len = len - FIXED_PART_LEN;
@@ -20,9 +28,9 @@ int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialize
                                             serialize_len + padding_chars);
 #else
 
-    chromium_base64_decode(reinterpret_cast<char *>(serialized),
-                           reinterpret_cast<const char *>(buf),
-                           serialize_len + padding_chars);
+    SERIAL_DECODE(reinterpret_cast<char *>(serialized),
+                  reinterpret_cast<const char *>(buf),
+                  serialize_len + padding_chars);
 #endif
     serialized[estimated_length + FIXED_PART_LEN] = padding_chars;
     return estimated_length + FIXED_PART_LEN + 1;
@@ -36,8 +44,8 @@ uint8_t *deserialize_base64_encoding(const uint8_t *serialized, uint16_t total_s
     size_t length = fast_avx2_base64_encode(reinterpret_cast<char *>(deserialized),
                                             reinterpret_cast<const char *>(serialized), serialize_len);
 #else
-    size_t length = chromium_base64_encode(reinterpret_cast<char *>(deserialized),
-                                           reinterpret_cast<const char *>(serialized), serialize_len);
+    size_t length = SERIAL_ENCODE(reinterpret_cast<char *>(deserialized),
+                                  reinterpret_cast<const char *>(serialized), serialize_len);
 
 #endif
     memcpy(deserialized + length - serialized[total_serialized_len - 1], serialized + serialize_len, FIXED_PART_LEN);
@@ -64,9 +72,9 @@ int serialize_base64_decoding_skip_index(uint8_t *message, uint16_t len, uint8_t
                                             serialize_len + padding_chars);
 #else
 
-    chromium_base64_decode(reinterpret_cast<char *>(serialized),
-                           reinterpret_cast<const char *>(buf),
-                           serialize_len + padding_chars);
+    SERIAL_DECODE(reinterpret_cast<char *>(serialized),
+                  reinterpret_cast<const char *>(buf),
+                  serialize_len + padding_chars);
 #endif
     serialized[estimated_length + FIXED_PART_LEN - INDEX_LEN] = padding_chars;
     return estimated_length + FIXED_PART_LEN - INDEX_LEN + 1;
@@ -81,8 +89,8 @@ uint8_t *deserialize_base64_encoding_add_index(const uint8_t *serialized, uint16
     size_t length = fast_avx2_base64_encode(reinterpret_cast<char *>(deserialized),
                                             reinterpret_cast<const char *>(serialized), serialize_len);
 #else
-    size_t length = chromium_base64_encode(reinterpret_cast<char *>(deserialized),
-                                           reinterpret_cast<const char *>(serialized), serialize_len);
+    size_t length = SERIAL_ENCODE(reinterpret_cast<char *>(deserialized),
+                                  reinterpret_cast<const char *>(serialized), serialize_len);
 
 #endif
     size_t offset = length - serialized[total_serialized_len - 1];
@@ -104,8 +112,8 @@ void deserialize_base64_encoding_add_index_in_place(const uint8_t *serialized, u
     size_t length = fast_avx2_base64_encode(reinterpret_cast<char *>(deserialized),
                                             reinterpret_cast<const char *>(serialized), serialize_len);
 #else
-    size_t length = chromium_base64_encode(reinterpret_cast<char *>(deserialized),
-                                           reinterpret_cast<const char *>(serialized), serialize_len);
+    size_t length = SERIAL_ENCODE(reinterpret_cast<char *>(deserialized),
+                                  reinterpret_cast<const char *>(serialized), serialize_len);
 
 #endif
     size_t offset = length - serialized[total_serialized_len - 1];
@@ -138,9 +146,9 @@ int serialize_base36_decoding_skip_index(uint8_t *message, uint16_t len, uint8_t
                                             serialize_len + padding_chars);
 #else
 
-    chromium_base64_decode(reinterpret_cast<char *>(serialized),
-                           reinterpret_cast<const char *>(buf),
-                           serialize_len + padding_chars);
+    SERIAL_DECODE(reinterpret_cast<char *>(serialized),
+                  reinterpret_cast<const char *>(buf),
+                  serialize_len + padding_chars);
 #endif
     return estimated_length + FIXED_PART_LEN - INDEX_LEN;
 }
@@ -154,8 +162,8 @@ uint8_t *deserialize_base36_encoding_add_index(const uint8_t *serialized, uint16
     size_t length = fast_avx2_base64_encode(reinterpret_cast<char *>(deserialized),
                                             reinterpret_cast<const char *>(serialized), serialize_len);
 #else
-    size_t length = chromium_base64_encode(reinterpret_cast<char *>(deserialized),
-                                           reinterpret_cast<const char *>(serialized), serialize_len);
+    size_t length = SERIAL_ENCODE(reinterpret_cast<char *>(deserialized),
+                                  reinterpret_cast<const char *>(serialized), serialize_len);
 
 #endif
     // 2nd: skip padding (padding could be 'A'-'Z', '+', '/', '=')
@@ -197,8 +205,8 @@ int serialize_base36_decoding_with_padding_skip_index(uint8_t *message, uint16_t
     fast_avx2_base64_decode(reinterpret_cast<char *>(serialized),
                                             reinterpret_cast<const char *>(local_storage), FIXED_BASES_SLOT_LEN);
 #else
-    chromium_base64_decode(reinterpret_cast<char *>(serialized),
-                           reinterpret_cast<const char *>(local_storage), FIXED_BASES_SLOT_LEN);
+    SERIAL_DECODE(reinterpret_cast<char *>(serialized),
+                  reinterpret_cast<const char *>(local_storage), FIXED_BASES_SLOT_LEN);
 #endif
     return estimated_length + FIXED_PART_LEN - INDEX_LEN;
 }

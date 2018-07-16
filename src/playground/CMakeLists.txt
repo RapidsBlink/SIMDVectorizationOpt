@@ -20,7 +20,8 @@ if (AVX2_FOUND)
 endif ()
 
 add_executable(test_serialization test_serialization.cpp ../utils/serialization.cpp ../utils/serialization.h
-        ../utils/log.cpp ../fast_base64/chromiumbase64.c ${AVX2_BASE64_FILES})
+        ../utils/log.cpp ../fast_base64/chromiumbase64.c ${AVX2_BASE64_FILES}
+        ../naive_base64/naive_base64.cpp ../naive_base64/naive_base64.h)
 
 add_executable(test_split_avx test_split.cpp ../fast_tokenizer/tokenizer.cpp ../utils/utils.cpp ../utils/log.cpp)
 target_compile_options(test_split_avx PRIVATE -O2)

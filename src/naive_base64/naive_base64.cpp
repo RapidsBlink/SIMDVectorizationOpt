@@ -24,7 +24,7 @@ static const char base64_decoding_table[123] = {
 
 size_t naive_base64_encode(char *dest, const char *str, size_t len) {
     size_t i = 0;
-    uint8_t *p = (uint8_t *) dest;
+    auto *p = (uint8_t *) dest;
 
     /* unsigned here is important! */
     uint8_t t1, t2, t3;
@@ -100,8 +100,8 @@ size_t naive_base64_decode(char *dest, const char *src, size_t len) {
         auto d1 = (uint8_t) base64_decoding_table[y[1]];
         auto d2 = (uint8_t) base64_decoding_table[y[2]];
         auto d3 = (uint8_t) base64_decoding_table[y[3]];
-        *p++ = (d0 << 2) | (d1 >> 4);
-        *p++ = (d1 << 4) | (d2 >> 2);
+        *p++ = (d0 << 2) | (d1 >> 4u);
+        *p++ = (d1 << 4) | (d2 >> 2u);
         *p++ = (d2 << 6) | d3;
     }
 
@@ -114,8 +114,8 @@ size_t naive_base64_decode(char *dest, const char *src, size_t len) {
             auto d1 = (uint8_t) base64_decoding_table[y[1]];
             auto d2 = (uint8_t) base64_decoding_table[y[2]];
             auto d3 = (uint8_t) base64_decoding_table[y[3]];
-            *p++ = (d0 << 2) | (d1 >> 4);
-            *p++ = (d1 << 4) | (d2 >> 2);
+            *p++ = (d0 << 2) | (d1 >> 4u);
+            *p++ = (d1 << 4) | (d2 >> 2u);
             *p++ = (d2 << 6) | d3;
         }
             return (chunks + 1) * 3;
@@ -132,25 +132,24 @@ size_t naive_base64_decode(char *dest, const char *src, size_t len) {
             auto d0 = (uint8_t) base64_decoding_table[y[0]];
             auto d1 = (uint8_t) base64_decoding_table[y[1]];
 
-            *p = (d0 << 2) | (d1 >> 4); // i.e. first char
+            *p = (d0 << 2) | (d1 >> 4u); // i.e. first char
         }
 
             break;
         default: /* case 3, 2 output bytes */
         {
-
+            /* 0x3c */
             auto d0 = (uint8_t) base64_decoding_table[y[0]];
             auto d1 = (uint8_t) base64_decoding_table[y[1]];
-            auto d2 = (uint8_t) base64_decoding_table[y[2]];  /* 0x3c */
+            auto d2 = (uint8_t) base64_decoding_table[y[2]];
 
-            *p++ = (d0 << 2) | (d1 >> 4);
-            *p = (d1 << 4) | (d2 >> 2);
+            *p++ = (d0 << 2u) | (d1 >> 4u);
+            *p = (d1 << 4u) | (d2 >> 2u);
         }
 
             break;
     }
 
 //    if (x >= BADCHAR) return MODP_B64_ERROR;
-
     return 3 * chunks + (6 * leftover) / 8;
 }
