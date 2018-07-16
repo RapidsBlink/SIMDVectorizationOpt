@@ -11,7 +11,7 @@ endif ()
 
 if (AVX2_FOUND)
     message(avx2)
-    set(AVX2_BASE64_FILES ../fast_base64/fastavxbase64.c ../fast_base64/klompavxbase64.c)
+    set(AVX2_BASE64_FILES ../fast_base64/fastavxbase64.c ../fast_base64/klompavxbase64.c ../naive_base64/naive_base64.cpp ../naive_base64/naive_base64.h)
 endif ()
 
 if (AVX2_FOUND)
