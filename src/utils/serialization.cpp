@@ -4,6 +4,7 @@
 #include "serialization.h"
 #include "../fast_base64/fastavxbase64.h"
 #include "../naive_base64/naive_base64.h"
+#include "log.h"
 
 #if defined(NAIVE_LOOKUP)
 #define SERIAL_DECODE naive_base64_decode
@@ -19,6 +20,96 @@
 #if defined(DISABLE_AVX2)
 #undef __AVX2__
 #endif
+
+#define BINARY_PART_LEN (8u)
+
+/*
+ * output:
+ * part1: varying_len_byte (1 or 2),
+ * part2: bytes for packed base64 bytes (3x),
+ * part3: left_char_byte namely serialized[estimated_length] (1),
+ * part4: memcpy bytes (BINARY_PART_LEN + serialized[estimated_length])
+ */
+
+int serialize_base64_decoding_general(uint8_t *message, uint16_t len, uint8_t *serialized) {
+    // serialize_len: 4x
+    size_t chunk_num = (len - BINARY_PART_LEN) / 4;
+    size_t serialize_len = chunk_num * 4;
+    size_t estimated_length = 3 * chunk_num;
+
+    // 1st: varying bytes interpretation: length of base64 packed values
+    if (estimated_length < 128) {
+        serialized[0] = static_cast<uint8_t>(estimated_length);
+        serialized += 1;
+    } else {
+        serialized[0] = static_cast<uint8_t>((estimated_length >> 7u) | 0x80); // assume < 32767
+        serialized[1] = static_cast<uint8_t>(estimated_length & (uint8_t) 0x7f);
+        serialized += 2;
+    }
+
+    // 2nd: left base64 char number
+    serialized[estimated_length] = static_cast<uint8_t>((len - BINARY_PART_LEN) % 4u);
+    // 3rd: copy left chars and fixed binary part
+    int copy_length = BINARY_PART_LEN + serialized[estimated_length];
+    memcpy(serialized + estimated_length + 1, message + serialize_len, copy_length);
+
+#ifdef __AVX2__
+    fast_avx2_base64_decode(reinterpret_cast<char *>(serialized), reinterpret_cast<const char *>(message),
+                            serialize_len);
+#else
+    SERIAL_DECODE(reinterpret_cast<char *>(serialized), reinterpret_cast<const char *>(message), serialize_len);
+
+#endif
+    return estimated_length + copy_length + (serialize_len < 128 ? 1 : 2);
+}
+
+uint8_t *deserialize_base64_encoding_general(const uint8_t *serialized, uint16_t total_serialized_len, int &len) {
+    // 1st: get the length of varying part
+    uint16_t varying_byte_len;
+
+    if ((serialized[0] & 0x80u) == 0) {
+        varying_byte_len = serialized[0];
+        serialized += 1;
+    } else {
+        varying_byte_len = static_cast<uint16_t>(((serialized[0] & 0x7fu) << 7u) + serialized[1]);
+        serialized += 2;
+    }
+
+    int left_bytes = BINARY_PART_LEN + serialized[varying_byte_len];
+    auto *deserialized = new uint8_t[varying_byte_len / 3 * 4 + left_bytes];
+    // 2nd: base64 part
+#ifdef __AVX2__
+    size_t length = fast_avx2_base64_encode(reinterpret_cast<char *>(deserialized),
+                                            reinterpret_cast<const char *>(serialized), varying_byte_len);
+#else
+    size_t length = SERIAL_ENCODE(reinterpret_cast<char *>(deserialized),
+                                  reinterpret_cast<const char *>(serialized), varying_byte_len);
+
+#endif
+
+    // 3rd: fixed part and left chars
+    memcpy(deserialized + length, serialized + varying_byte_len + 1, left_bytes);
+    // 4th: assign the len
+    len = length + left_bytes;
+    return deserialized;
+}
+
+uint8_t *deserialize_base64_encoding(const uint8_t *serialized, uint16_t total_serialized_len, int &len) {
+    auto serialize_len = total_serialized_len - FIXED_PART_LEN - 1;
+    auto *deserialized = new uint8_t[total_serialized_len / 3 * 4 + 16];
+
+#ifdef __AVX2__
+    size_t length = fast_avx2_base64_encode(reinterpret_cast<char *>(deserialized),
+                                            reinterpret_cast<const char *>(serialized), serialize_len);
+#else
+    size_t length = SERIAL_ENCODE(reinterpret_cast<char *>(deserialized),
+                                  reinterpret_cast<const char *>(serialized), serialize_len);
+
+#endif
+    memcpy(deserialized + length - serialized[total_serialized_len - 1], serialized + serialize_len, FIXED_PART_LEN);
+    len = length - serialized[total_serialized_len - 1] + FIXED_PART_LEN;
+    return deserialized;
+}
 
 int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialized) {
     auto serialize_len = len - FIXED_PART_LEN;
@@ -42,23 +133,6 @@ int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialize
 #endif
     serialized[estimated_length + FIXED_PART_LEN] = padding_chars;
     return estimated_length + FIXED_PART_LEN + 1;
-}
-
-uint8_t *deserialize_base64_encoding(const uint8_t *serialized, uint16_t total_serialized_len, int &len) {
-    auto serialize_len = total_serialized_len - FIXED_PART_LEN - 1;
-    auto *deserialized = new uint8_t[total_serialized_len / 3 * 4 + 16];
-
-#ifdef __AVX2__
-    size_t length = fast_avx2_base64_encode(reinterpret_cast<char *>(deserialized),
-                                            reinterpret_cast<const char *>(serialized), serialize_len);
-#else
-    size_t length = SERIAL_ENCODE(reinterpret_cast<char *>(deserialized),
-                                  reinterpret_cast<const char *>(serialized), serialize_len);
-
-#endif
-    memcpy(deserialized + length - serialized[total_serialized_len - 1], serialized + serialize_len, FIXED_PART_LEN);
-    len = length - serialized[total_serialized_len - 1] + FIXED_PART_LEN;
-    return deserialized;
 }
 
 // Skip index =================================================================================================

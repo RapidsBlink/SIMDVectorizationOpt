@@ -6,6 +6,10 @@
 #define VARYING_VERIFY_LEN (4u)
 #define FIXED_PART_LEN (10u)
 
+int serialize_base64_decoding_general(uint8_t *message, uint16_t len, uint8_t *serialized);
+
+uint8_t *deserialize_base64_encoding_general(const uint8_t *serialized, uint16_t total_serialized_len, int &len);
+
 // 1st: basic usage of base64 encoding and decoding for deserialization and serialization
 int serialize_base64_decoding(uint8_t *message, uint16_t len, uint8_t *serialized);
 

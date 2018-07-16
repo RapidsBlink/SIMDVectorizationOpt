@@ -28,7 +28,7 @@ char bases36[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
 #define BASE36_SIZE 36
 #define MSG_NUM 100000000
 #define ARR_SIZE 209715200
-#define MSG_LEN 200
+#define MSG_LEN 50
 #define SMALL_MSG_LEN 30
 
 using namespace std;
@@ -66,15 +66,19 @@ void test_efficiency_base64() {
         memcpy(intermediate + MSG_LEN + 4, &idx, 4);
 
         auto *serialized = new char[MSG_LEN + FIXED_PART_LEN + 64];
-        int middle_len = serialize_base64_decoding(reinterpret_cast<uint8_t *>(intermediate),
-                                                   MSG_LEN + 8,
-                                                   reinterpret_cast<uint8_t *>(serialized));
-
+        int middle_len = serialize_base64_decoding_general(reinterpret_cast<uint8_t *>(intermediate),
+                                                           MSG_LEN + 8,
+                                                           reinterpret_cast<uint8_t *>(serialized));
+        static thread_local bool is_first = true;
+        if (is_first) {
+            is_first = false;
+            log_info("%d", middle_len);
+        }
 #ifdef ENABLE_DESERIALIZE
         // 2nd: deserialize
         int length;
-        auto deserialized = deserialize_base64_encoding(reinterpret_cast<const uint8_t *>(serialized), middle_len,
-                                                        length);
+        auto deserialized = deserialize_base64_encoding_general(reinterpret_cast<const uint8_t *>(serialized),
+                                                                middle_len, length);
         assert(length == MSG_LEN + 8);
         assert(memcmp(msg_arr + idx, deserialized, MSG_LEN) == 0);
         assert(memcmp(&idx, deserialized + MSG_LEN, 4) == 0);
