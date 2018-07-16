@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     base_path = os.curdir
     print 'cur dir:', base_path
-    stat_dir = os.sep.join([base_path, 'stat-200'])
+    stat_dir = os.sep.join([base_path, 'stat-50-200'])
     os.system('mkdir -p ' + stat_dir)
     for exec_name in exec_name_lst:
         cmd = ' '.join([os.sep.join([base_path, '..', 'cmake-build-debug', 'src', 'playground', exec_name]), '>',

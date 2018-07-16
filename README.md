@@ -69,14 +69,14 @@ inline int __tzcnt_u32_using_popcnt_cmpgt(unsigned int x) {
 
 * the translation table
 
-base64 | ascii | offset (diff)
----    | ---   | ---
-0-25   | (65-90)  0x41-0x5a | 65
-26-51  | (97-122) 0x61-0x7a | 71
-52-61  | (48-57)  0x40-0x49 | -4
-62     | '+' (43) 0x2b      | -19
-63     | '/' (47) 0x2f      | -16
-others | invalid            | invalid
+base64 | ascii-dec | ascii-hex | offset (diff)
+---    | ---   | --- | ---
+0-25   | 65-90  | 0x41-0x5a | 65
+26-51  | 97-122 | 0x61-0x7a | 71
+52-61  | 48-57  | 0x40-0x49 | -4
+62     | 43, i.e., '+' | 0x2b      | -19
+63     | 47, i.e., '/' | 0x2f      | -16
+others | invalid            | invalid | invalid
 
 ### Benchmark
 
@@ -100,6 +100,16 @@ naive-lookup | ascii-base64 translation using two look-up tables
 chromium     | use separate lookup tables for saving some computations
 fast-avx2    | apply avx2, and serial fallback using chromium
 
+
+* message len 200
+
+algorithms | TPS-total | TPS-serializtion | TPS-deserializtion
+--- | ---  | --- | --- 
+naive_comp | 201.448 MB/s | 467.150 MB/s | 354.179 MB/s
+naive_lookup | 490.444 MB/s | 1080.221 MB/s | 898.286 MB/s
+chromium | 493.397 MB/s | 1039.237 MB/s | 939.390 MB/s
+avx2_chromium | 887.260 MB/s | 1838.769 MB/s | 1714.608 MB/s
+
 * message len 80
 
 algorithms | TPS-total | TPS-serializtion | TPS-deserializtion
@@ -117,3 +127,5 @@ naive_comp | 115.787 MB/s | 218.357 MB/s | 246.493 MB/s
 naive_lookup | 330.488 MB/s | 598.695 MB/s | 737.719 MB/s
 chromium | 335.035 MB/s | 595.675 MB/s | 765.698 MB/s
 avx2_chromium | 385.963 MB/s | 656.360 MB/s | 936.887 MB/s
+
+
