@@ -59,7 +59,7 @@ inline int __tzcnt_u32_using_popcnt_cmpgt(unsigned int x) {
         next++;
 ```
 
-* details: see [src/fast_tokenizer/tokenizer.cpp](src/fast_tokenizer/tokenizer.cpp)
+* details: see [src/fast_tokenizer/tokenizer.cpp](src/fast_tokenizer/tokenizer.cpp), [src/playground/test_split.cpp](src/playground/test_split.cpp)
 
 ## Base64 Decoding/Encoding (i.e, Serialization/Deserialization)
 
@@ -80,7 +80,18 @@ others | invalid            | invalid
 
 ### Benchmark
 
-report TPS (through including both serialization and deserialization time)
+* implementations
+
+benchmark main file: [src/playground/test_serialization.cpp](src/playground/test_serialization.cpp)
+
+algorithms | link
+--- | ---
+naive-comp   | [src/naive_base64/naive_base64.cpp](src/naive_base64/naive_base64.cpp)
+naive-lookup | [src/naive_base64/naive_base64.cpp](src/naive_base64/naive_base64.cpp)
+chromium     | [src/fast_base64/chromiumbase64.c](src/fast_base64/chromiumbase64.c)
+fast-avx2    | [src/fast_base64/fastavxbase64.c](src/fast_base64/fastavxbase64.c)
+
+* measure: we report TPS (throughput including both serialization and deserialization time)
 
 algorithms | idea
 --- | ---
