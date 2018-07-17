@@ -52,8 +52,8 @@ inline int __tzcnt_u32_using_popcnt_cmpeq(unsigned int x) {
             __m128i cmp_res = _mm_cmpeq_epi8(pivot_u, inspected_ele);
             int mask = _mm_movemask_epi8(cmp_res); // 16 bits
 
-            int advance = (mask == 0 ? 16 :
-             __tzcnt_u32_using_popcnt_cmpgt(mask));
+            int advance = (mask == 0 ?
+                           16 : __tzcnt_u32_using_popcnt_cmpeq(mask));
             i += advance;
             if (advance < 16) { break; }
         }
