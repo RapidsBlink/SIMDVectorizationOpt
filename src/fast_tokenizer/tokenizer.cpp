@@ -41,7 +41,7 @@ int serial_split(const char *str, short len, short *off) {
 
 #if defined(__SSE4_2__)
 
-inline int __tzcnt_u32_using_popcnt_cmpgt(unsigned int x) {
+inline int __tzcnt_u32_using_popcnt_cmpeq(unsigned int x) {
     int ret_cnt = 0;
     int half_bits = x & (0xff);
     if (half_bits == 0) {
@@ -50,7 +50,8 @@ inline int __tzcnt_u32_using_popcnt_cmpgt(unsigned int x) {
     }
 
     __m128i pivot_u = _mm_set1_epi16(half_bits);
-    __m128i inspected_ele = _mm_set_epi16(0xff, 0x7f, 0x3f, 0x1f, 0xf, 0x7, 0x3, 0x1);
+    __m128i inspected_ele = _mm_set_epi16(
+            0xff, 0x7f, 0x3f, 0x1f, 0xf, 0x7, 0x3, 0x1);
     __m128i trunc_pivot_u = _mm_and_si128(pivot_u, inspected_ele);
 
     __m128i pivot_new = _mm_set1_epi16(0);
@@ -77,7 +78,8 @@ inline int sse4_split_efficient(char *str, short len, short *off) {
             __m128i cmp_res = _mm_cmpeq_epi8(pivot_u, inspected_ele);
             int mask = _mm_movemask_epi8(cmp_res); // 16 bits
 
-            int advance = (mask == 0 ? 16 : __tzcnt_u32_using_popcnt_cmpgt(mask));
+            int advance = (mask == 0 ?
+                           16 : __tzcnt_u32_using_popcnt_cmpeq(mask));
             i += advance;
             if (advance < 16) { break; }
         }
@@ -92,7 +94,8 @@ inline int sse4_split_efficient(char *str, short len, short *off) {
 
             int mask = _mm_movemask_epi8(cmp_res); // 16 bits
 
-            int advance = (mask == 0 ? 16 : __tzcnt_u32_using_popcnt_cmpgt(mask));
+            int advance = (mask == 0 ?
+                           16 : __tzcnt_u32_using_popcnt_cmpeq(mask));
             i += advance;
             if (advance < 16 || i >= len) { break; }
         }
@@ -211,14 +214,14 @@ int serialize_str(char *str, const short *off, short len_off, int offset, char *
 
                         int mask = _mm_movemask_epi8(cmp_res); // 16 bits
 
-                        int advance = (mask == 0 ? 16 : __tzcnt_u32_using_popcnt_cmpgt(mask));
+                        int advance = (mask == 0 ? 16 : __tzcnt_u32_using_popcnt_cmpeq(mask));
                         seek += advance;
                         if (advance < 16 || seek >= val_off_end) { break; }
                     }
                     if (seek > val_off_end) { seek = val_off_end; }
 #else
-                     printf("serial...");
-                    while (seek < val_off_end && str[seek] != '%') { seek++; }
+                    printf("serial...");
+                   while (seek < val_off_end && str[seek] != '%') { seek++; }
 #endif
                     int advance = seek - last_seek;
                     memcpy(res + offset, str + last_seek, advance);
@@ -323,7 +326,7 @@ int serialize_str_sse4(char *str, const short *off, short len_off, int offset, c
 
                         int mask = _mm_movemask_epi8(cmp_res); // 16 bits
 
-                        int advance = (mask == 0 ? 16 : __tzcnt_u32_using_popcnt_cmpgt(mask));
+                        int advance = (mask == 0 ? 16 : __tzcnt_u32_using_popcnt_cmpeq(mask));
                         seek += advance;
                         if (advance < 16 || seek >= val_off_end) { break; }
                     }

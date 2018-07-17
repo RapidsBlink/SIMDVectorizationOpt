@@ -52,3 +52,5 @@ endmacro()
 
 InitExecList(enable_deserialize -DENABLE_DESERIALIZE=1)
 InitExecList(disable_deserialize "")
+
+add_executable(sse_instrinsics_demo sse_instrinsics_demo.cpp ../utils/log.cpp)
