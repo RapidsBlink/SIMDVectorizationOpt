@@ -75,7 +75,7 @@ base64 | ascii-dec | ascii-hex | offset (diff)
 ---    | ---   | --- | ---
 0-25   | 65-90  | 0x41-0x5a | 65
 26-51  | 97-122 | 0x61-0x7a | 71
-52-61  | 48-57  | 0x40-0x49 | -4
+52-61  | 48-57  | 0x30-0x39 | -4
 62     | 43, i.e., '+' | 0x2b      | -19
 63     | 47, i.e., '/' | 0x2f      | -16
 others | invalid            | invalid | invalid
