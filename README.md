@@ -80,6 +80,38 @@ base64 | ascii-dec | ascii-hex | offset (diff)
 63     | 47, i.e., '/' | 0x2f      | -16
 others | invalid            | invalid | invalid
 
+### Base64 Decoding Vectorization
+
+*ascii code to base64 translation vectorization (simplified)*
+
+```cpp
+        // attention: each SIMD lane is 128-bits
+        const __m256i lut_roll = _mm256_setr_epi8(
+            0,   16,  19,   4, -65, -65, -71, -71,
+            0,   0,   0,   0,   0,   0,   0,   0,
+            0,   16,  19,   4, -65, -65, -71, -71,
+            0,   0,   0,   0,   0,   0,   0,   0
+        );
+        const __m256i mask_2F = _mm256_set1_epi8(0x2f);
+
+        // 1st: shift right for 4 32bit-wise-elements in each SIMD lane
+        // shift to get high 4bits
+        __m256i hi_nibbles  = _mm256_srli_epi32(str, 4);
+        
+        // 2nd: cmpeq to distinguish 0x2f ('/') from 0x2b ('+') 
+        // when the byte is 0x2f, the result byte in eq_2F is 0xff (-1)  
+        const __m256i eq_2F = _mm256_cmpeq_epi8(str, mask_2F);
+
+        // 3rd: add -1 when the byte is 0x2f, 
+        // lookup lut_roll for offsets to add, shuffling in each SIMD Lane
+        // shuffling using the previous high 4-bits in the byte (see 1st step)
+        const __m256i roll  = _mm256_shuffle_epi8(lut_roll, 
+                                _mm256_add_epi8(eq_2F, hi_nibbles));
+        
+        // 4th: add offsets
+        str = _mm256_add_epi8(str, roll);
+```
+
 ### Benchmark
 
 * implementations
