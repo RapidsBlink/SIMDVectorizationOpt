@@ -1,5 +1,7 @@
 # SIMD Vectorization Demo
 
+This demo is made by [Wang Lipeng](https://github.com/WANG-lp) and [CHE Yulin](https://github.com/CheYulin) from Hong Kong University of Science and Technology. Feel free to give this repo a star if you like it.
+
 intel intrinsics guide: see https://software.intel.com/sites/landingpage/IntrinsicsGuide/
 
 bechmarking CPU info: see [python_playground](python_playground), using single-thread
