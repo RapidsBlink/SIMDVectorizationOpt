@@ -4,7 +4,7 @@ This demo is made by [Wang Lipeng](https://github.com/WANG-lp) and [CHE Yulin](h
 
 intel intrinsics guide: see https://software.intel.com/sites/landingpage/IntrinsicsGuide/
 
-bechmarking CPU info: see [python_playground](python_playground), using single-thread
+bechmarking CPU info: see [src/playground](src/playground), using single-thread
 
 ## Tokenizing
 
