@@ -1,3 +1,6 @@
+# Disclaimer
+此项目仅供学习与交流使用，请遵循MIT协议，如果您在任何项目中使用相关代码，请保留此项目的LICENSE文件。
+
 # SIMD Vectorization Demo
 
 This demo is made by [Wang Lipeng](https://github.com/WANG-lp) and [CHE Yulin](https://github.com/CheYulin) from Hong Kong University of Science and Technology. Feel free to give this repo a star if you like it.
